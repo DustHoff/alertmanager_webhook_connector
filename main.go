@@ -14,7 +14,7 @@ func main() {
 	flag.Parse()
 	config := configuration.Load(configFile)
 
-	hook := alerthook.Manager{}
+	hook := alerthook.NewManager()
 	hook.RegisterTicketSystem(manager.CreateTicketHandler(config.TicketSystem))
 	http.Handle("/alert", hook)
 	logging.Error(http.ListenAndServe(":8080", nil))
