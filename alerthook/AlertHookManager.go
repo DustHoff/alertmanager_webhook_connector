@@ -41,6 +41,8 @@ func (m Manager) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 func (m Manager) handleAlert(message AlertMassage) {
 	logging.Info(message)
 	for _, ticketHandler := range m.ticketSystem {
-		ticketHandler.CreateTicket("["+message.Status+"] ", message.ExternalURL)
+		for _, alert := range message.Alerts {
+			ticketHandler.CreateTicket("["+alert.Status+"] "+alert.Labels["alertname"], alert.Annotations["description"])
+		}
 	}
 }
