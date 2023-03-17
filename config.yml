@@ -1,0 +1,5 @@
+ticketSystem:
+  - type: LOGGER
+    url: https://znoony.example.org
+    username: test
+    password: test
