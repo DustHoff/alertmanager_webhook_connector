@@ -22,7 +22,6 @@ func (m Manager) RegisterTicketSystem(ticketSystem []ticketsystem.TicketHandler)
 }
 
 func (m Manager) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	logging.Info(request.Method)
 	if request.Method != "POST" {
 		http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -39,6 +38,9 @@ func (m Manager) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	m.handleAlert(message)
 }
 
-func (m Manager) handleAlert(massage AlertMassage) {
+func (m Manager) handleAlert(message AlertMassage) {
 
+	for _, ticketHandler := range m.ticketSystem {
+		ticketHandler.CreateTicket("["+message.Status+"] ", message.ExternalURL)
+	}
 }
