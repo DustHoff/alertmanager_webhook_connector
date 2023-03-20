@@ -18,7 +18,7 @@ func getType(t string) ticketsystem.TicketHandler {
 	return nil
 }
 
-func CreateTicketHandler(configList []ticketsystem.Config) []ticketsystem.TicketHandler {
+func CreateTicketHandler(configList []ticketsystem.Config) *[]ticketsystem.TicketHandler {
 	var allHandler []ticketsystem.TicketHandler
 	for _, config := range configList {
 		logging.Info("Initializing Connector", config.Type)
@@ -26,5 +26,5 @@ func CreateTicketHandler(configList []ticketsystem.Config) []ticketsystem.Ticket
 		handler.Init(config)
 		allHandler = append(allHandler, handler)
 	}
-	return allHandler
+	return &allHandler
 }

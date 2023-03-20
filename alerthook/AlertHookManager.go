@@ -5,23 +5,27 @@ import (
 	"OTRSAlertmanagerHook/ticketsystem"
 	"encoding/json"
 	"net/http"
+	"sync"
 )
 
 var _ http.Handler = &Manager{}
 
 type Manager struct {
-	ticketSystem []ticketsystem.TicketHandler
+	sync.Mutex
+	ticketSystem *[]ticketsystem.TicketHandler
 }
 
-func NewManager() Manager {
-	return Manager{}
+func NewManager() *Manager {
+	return &Manager{}
 }
 
-func (m Manager) RegisterTicketSystem(ticketSystem []ticketsystem.TicketHandler) {
+func (m *Manager) RegisterTicketSystem(ticketSystem *[]ticketsystem.TicketHandler) {
+	m.Lock()
+	defer m.Unlock()
 	m.ticketSystem = ticketSystem
 }
 
-func (m Manager) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (m *Manager) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	if request.Method != "POST" {
 		http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -34,12 +38,13 @@ func (m Manager) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		logging.Error(err)
 		http.Error(writer, err.Error(), 400)
 	}
-
 	m.handleAlert(message)
 }
 
-func (m Manager) handleAlert(message AlertMassage) {
-	for _, ticketHandler := range m.ticketSystem {
+func (m *Manager) handleAlert(message AlertMassage) {
+	m.Lock()
+	defer m.Unlock()
+	for _, ticketHandler := range *m.ticketSystem {
 		for _, alert := range message.Alerts {
 			ticketHandler.CreateTicket("["+alert.Status+"] "+alert.Labels["alertname"], alert.Annotations["description"])
 		}

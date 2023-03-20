@@ -2,11 +2,13 @@ package systems
 
 import (
 	"OTRSAlertmanagerHook/ticketsystem"
+	"net/http"
+	"time"
 )
 
-var _ ticketsystem.TicketHandler = &TicketSystem{}
-
 type TicketSystem struct {
+	ticketsystem.TicketHandler
+	client http.Client
 }
 
 func (t TicketSystem) CreateTicket(subject string, body string) {
@@ -15,4 +17,7 @@ func (t TicketSystem) CreateTicket(subject string, body string) {
 }
 
 func (t TicketSystem) Init(config ticketsystem.Config) {
+	t.client = http.Client{
+		Timeout: 30 * time.Second,
+	}
 }
