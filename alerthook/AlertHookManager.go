@@ -46,7 +46,11 @@ func (m *Manager) handleAlert(message AlertMassage) {
 	defer m.Unlock()
 	for _, ticketHandler := range *m.ticketSystem {
 		for _, alert := range message.Alerts {
-			ticketHandler.CreateTicket("["+alert.Status+"] "+alert.Labels["alertname"], alert.Annotations["description"])
+			success, err := ticketHandler.CreateTicket("["+alert.Status+"] "+alert.Labels["alertname"], alert.Annotations["description"])
+			logging.Info("Ticket creation successfully:", success)
+			if err != nil {
+				logging.Error(err)
+			}
 		}
 	}
 }

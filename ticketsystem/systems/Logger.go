@@ -10,9 +10,10 @@ type LoggerSystem struct {
 	logger log.Logger
 }
 
-func (l LoggerSystem) Init(config ticketsystem.Config) {
+func (l LoggerSystem) Init(config *ticketsystem.Config) {
 }
 
-func (l LoggerSystem) CreateTicket(subject string, body string) {
+func (l LoggerSystem) CreateTicket(subject string, body string) (bool, error) {
 	log.Println("test")
+	return false, nil
 }

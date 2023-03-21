@@ -9,9 +9,9 @@ import (
 func getType(t string) ticketsystem.TicketHandler {
 	switch t {
 	case "ZNOONY":
-		return systems.TicketSystem{}
+		return &systems.TicketSystem{}
 	case "LOGGER":
-		return systems.LoggerSystem{}
+		return &systems.LoggerSystem{}
 	default:
 		logging.Fatal("Unknown Type ", t)
 	}
@@ -23,7 +23,7 @@ func CreateTicketHandler(configList []ticketsystem.Config) *[]ticketsystem.Ticke
 	for _, config := range configList {
 		logging.Info("Initializing Connector", config.Type)
 		handler := getType(config.Type)
-		handler.Init(config)
+		handler.Init(&config)
 		allHandler = append(allHandler, handler)
 	}
 	return &allHandler

@@ -1,5 +1,9 @@
 ticketSystem:
   - type: LOGGER
-    url: https://znoony.example.org
-    username: test
-    password: test
+    url: https://logger.hook
+  - type: ZNOONY
+    url: https://znoony.example.com
+    properties:
+      queue: "monitoring"
+      username: "user"
+      password: "password"

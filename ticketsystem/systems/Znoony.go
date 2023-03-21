@@ -2,22 +2,25 @@ package systems
 
 import (
 	"OTRSAlertmanagerHook/ticketsystem"
-	"net/http"
-	"time"
+	"OTRSAlertmanagerHook/ticketsystem/systems/znoony"
 )
 
 type TicketSystem struct {
 	ticketsystem.TicketHandler
-	client http.Client
+	client znoony.Znoony
+	config *ticketsystem.Config
 }
 
-func (t TicketSystem) CreateTicket(subject string, body string) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t TicketSystem) Init(config ticketsystem.Config) {
-	t.client = http.Client{
-		Timeout: 30 * time.Second,
+func (t *TicketSystem) CreateTicket(subject string, body string) (bool, error) {
+	_, err := t.client.CreateTicket(znoony.NewZnoonyTicket(t.config.Properties["queue"], subject, body))
+	if err != nil {
+		return false, err
 	}
+
+	return true, nil
+}
+
+func (t *TicketSystem) Init(config *ticketsystem.Config) {
+	t.client = znoony.NewZnoonyClient(config)
+	t.config = config
 }
