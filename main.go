@@ -15,6 +15,7 @@ func main() {
 	config := configuration.Load(configFile)
 
 	hook := alerthook.NewManager()
+	hook.SetTemplate(config.Template)
 	handlers := manager.CreateTicketHandler(config.TicketSystem)
 	hook.RegisterTicketSystem(handlers)
 	http.Handle("/alert", hook)
