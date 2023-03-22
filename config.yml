@@ -6,4 +6,4 @@ ticketSystem:
       password: "password"
 template:
   subject: '[{{.Status}}] {{index .Labels "alertname"}}'
-  bodyFile: message.tpl
+  bodyFile: /templates/message.tpl
