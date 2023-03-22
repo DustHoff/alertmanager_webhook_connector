@@ -1,6 +1,7 @@
 package systems
 
 import (
+	"OTRSAlertmanagerHook/logging"
 	"OTRSAlertmanagerHook/ticketsystem"
 	"log"
 )
@@ -14,6 +15,7 @@ func (l LoggerSystem) Init(config *ticketsystem.Config) {
 }
 
 func (l LoggerSystem) CreateTicket(subject string, body string) (bool, error) {
-	log.Println("test")
-	return false, nil
+	logging.Info("Subject", subject)
+	logging.Info("Body", body)
+	return true, nil
 }
