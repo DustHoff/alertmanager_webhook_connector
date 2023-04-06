@@ -1,12 +1,15 @@
 package znoony
 
 import (
+	"OTRSAlertmanagerHook/logging"
 	"OTRSAlertmanagerHook/ticketsystem"
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -62,10 +65,19 @@ func NewZnoonyTicket(queue string, subject string, body string) TicketRequest {
 }
 
 func NewZnoonyClient(config *ticketsystem.Config) Znoony {
-
+	insecureSkipVerify, err := strconv.ParseBool(config.Properties["InsecureSkipVerify"])
+	if err != nil {
+		logging.Error(err)
+		insecureSkipVerify = false
+	}
 	return Znoony{
 		httpClient: http.Client{
 			Timeout: 30 * time.Second,
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: insecureSkipVerify,
+				},
+			},
 		},
 		config: config,
 	}
