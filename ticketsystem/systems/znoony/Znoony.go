@@ -86,6 +86,7 @@ func NewZnoonyClient(config *ticketsystem.Config) Znoony {
 func (z Znoony) CreateTicket(ticket TicketRequest) (TicketResponse, error) {
 	ticket.UserLogin = z.config.Properties["username"]
 	ticket.Password = z.config.Properties["password"]
+	ticket.Ticket.CustomerUser = z.config.Properties["customer"]
 
 	requestBuffer := bytes.NewBufferString("")
 	ticketEncoder := json.NewEncoder(requestBuffer)
